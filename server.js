@@ -17,7 +17,7 @@ function log(req, res, next) {
 app.use(log);
 
 function off(){
-  var killcmd ="kill $(pgrep -f 'python rain.py') && python led_scripts/off.py"
+  var killcmd ='kill $(pgrep -f "python rain.py") && python led_scripts/off.py'
   //var cmd = "python led_scripts/off.py"
   exec(killcmd, (error, stdout, stderr) => {
       if (error) {
