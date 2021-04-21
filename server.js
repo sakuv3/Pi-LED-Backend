@@ -18,8 +18,6 @@ function log(req, res, next) {
   console.log(req.method + " Request at " + req.url);
   next();
 }
-app.use(log);
-
 function lights_off(){
     if (running){
         python_process.kill('SIGINT');
@@ -39,10 +37,13 @@ function lights_off(){
         console.log(`${stdout}`);
     });
 }
+app.use(log);
+app.use(lights_off);
+
 
 //Endpoints
 app.get('/off', function(req,res) {
-    lights_off();
+    //lights_off();
     res.writeHead(200, {
         "Content-Type": "application/json",
     });
@@ -50,7 +51,7 @@ app.get('/off', function(req,res) {
 });
 
 app.get('/rain', function(req,res) {
-    lights_off();
+    //lights_off();
     var pyshell = new PythonShell('led_scripts/rain.py');
     pyshell.end(function(err){
     if(err){
@@ -65,7 +66,7 @@ app.get('/rain', function(req,res) {
 });
 
 app.get('/dimm', function(req,res) {
-    lights_off();
+    //lights_off();
     var cmd = "python led_scripts/dimm.py"
     exec(cmd, (error, stdout, stderr) => {
         if (error) {
