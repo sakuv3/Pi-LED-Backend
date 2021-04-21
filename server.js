@@ -16,22 +16,6 @@ function log(req, res, next) {
 }
 app.use(log);
 
-function sudo(){
-  var sudocmd ='sudo ifconfig'
-  //var cmd = "python led_scripts/off.py"
-  exec(sudocmd, (error, stdout, stderr) => {
-      if (error) {
-          console.log(`error: ${error.message}`);
-          return;
-      }
-      if (stderr) {
-          console.log(`stderr: ${stderr}`);
-          return;
-      }
-      //stdout:
-      console.log(`${stdout}`);
-  });
-}
 function off(){
   var killcmd ='./led_scripts/kill.sh && python led_scripts/off.py'
   //var cmd = "python led_scripts/off.py"
@@ -98,7 +82,6 @@ app.get('/rain', function(req,res) {
 // command
 app.get('/off', function(req,res) {
   off();
-  sudo();
 });
 
 // test
