@@ -98,7 +98,7 @@ app.get('/rain', function(req,res) {
 // command
 app.get('/off', function(req,res) {
   off();
-  sudocmd();
+  sudo();
 });
 
 // test
