@@ -50,10 +50,7 @@ app.get('/rain', function(req,res) {
     // script keeps running so we need an instance to be able to kill it
     pyshell = new PythonShell('rain.py', options);
 
-    res.writeHead(200, {
-        "Content-Type": "application/json",
-    });
-    res.end("rainbow");
+    res.json({msg:'rainbow'});
 });
 
 app.get('/dimm', function(req,res) {
@@ -62,10 +59,7 @@ app.get('/dimm', function(req,res) {
     PythonShell.run('dimm.py', options, function (err) {
           if (err) throw err;
     });
-    res.writeHead(200, {
-        "Content-Type": "application/json",
-    });
-    res.end("dimmed");
+    res.json({msg:'dimmed'});
 });
 
 app.get("/test", function (req, res) {
