@@ -32,6 +32,10 @@ app.use(log);
 
 
 //Endpoints
+app.get('/wtf', function(req, res){
+    res.json({ user: 'geek' });
+});
+
 app.get('/off', function(req,res) {
     kill_if_python_process();
     PythonShell.run('off.py', options, function (err) {
@@ -40,7 +44,7 @@ app.get('/off', function(req,res) {
     res.writeHead(200, {
         "Content-Type": "application/json",
     });
-    res.end("lights off");
+    res.json({msg:'lights off'});
 });
 
 app.get('/rain', function(req,res) {
@@ -52,7 +56,7 @@ app.get('/rain', function(req,res) {
     res.writeHead(200, {
         "Content-Type": "application/json",
     });
-    res.end("party mode");
+    res.end("msg":"rainbow");
 });
 
 app.get('/dimm', function(req,res) {
@@ -64,7 +68,7 @@ app.get('/dimm', function(req,res) {
     res.writeHead(200, {
         "Content-Type": "application/json",
     });
-    res.end("dimmed");
+    res.end("msg":"dimmed");
 });
 
 app.get("/test", function (req, res) {
