@@ -41,6 +41,7 @@ app.get('/favicon.ico', function(req, res) {
 
 // command
 app.get('/dimm', function(req,res) {
+  off();
   var cmd = "python led_scripts/dimm.py"
   exec(cmd, (error, stdout, stderr) => {
       if (error) {
@@ -58,6 +59,7 @@ app.get('/dimm', function(req,res) {
 
 // command
 app.get('/rain', function(req,res) {
+  off();
   var cmd = "python led_scripts/rain.py"
   exec(cmd, (error, stdout, stderr) => {
       if (error) {
