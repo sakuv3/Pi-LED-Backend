@@ -36,12 +36,12 @@ app.get('/', function(req, res) {
     res.sendFile(__dirname + "/index.html");
 });
 
-app.get('/app.js', function(req, res) {
+app.get('/app.js/', function(req, res) {
     res.sendFile(__dirname + "/app.js");
 });
 
 //Endpoints
-app.get('/off', function(req,res) {
+app.get('/off/', function(req,res) {
     kill_if_python_process();
     PythonShell.run('off.py', options, function (err) {
         if (err) throw err;
@@ -49,7 +49,7 @@ app.get('/off', function(req,res) {
     res.status(200).json({msg:'off'});
 });
 
-app.get('/rain', function(req,res) {
+app.get('/rain/', function(req,res) {
     kill_if_python_process();
     running = true;
     // script keeps running so we need an instance to be able to kill it
@@ -58,7 +58,16 @@ app.get('/rain', function(req,res) {
     res.status(200).json({msg:'rain'});
 });
 
-app.get('/dimm', function(req,res) {
+app.get('/rain/:speed/', function(req,res) {
+    kill_if_python_process();
+    running = true;
+    // script keeps running so we need an instance to be able to kill it
+    pyshell = new PythonShell('rain.py', options);
+
+    res.status(200).json({msg:'rain'});
+});
+
+app.get('/dimm/', function(req,res) {
     kill_if_python_process();
     running = true;
     PythonShell.run('dimm.py', options, function (err) {
@@ -67,7 +76,7 @@ app.get('/dimm', function(req,res) {
     res.status(200).json({msg:'dimm'});
 });
 
-app.get("/test", function (req, res) {
+app.get("/test/", function (req, res) {
     fs.readFile(filename, "utf8", function (err, data) {
         res.writeHead(200, {
             "Content-Type": "application/json",
