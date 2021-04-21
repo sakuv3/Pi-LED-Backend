@@ -9,6 +9,7 @@
   "author": "joni",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.21.1",
     "child_process": "^1.0.2",
     "core-js": "^3.10.1",
     "cors": "^2.8.5",

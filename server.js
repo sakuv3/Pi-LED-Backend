@@ -67,7 +67,7 @@ app.get("/test", function (req, res) {
     });
 });
 
-// ignore this
+// ignore favicon
 app.get('/favicon.ico', function(req, res) {
     res.status(204);
     res.end();
