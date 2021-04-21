@@ -5,7 +5,7 @@ const fs = require("fs");
 const { exec } = require("child_process");
 const PORT = 33333
 const filename = __dirname + "/test.json";
-ROFLROFLROFL
+
 app.use(express.json());
 app.use(cors());
 
@@ -15,6 +15,22 @@ function log(req, res, next) {
   next();
 }
 app.use(log);
+
+function off(){
+  var cmd = "python led_scripts/off.py"
+  exec(cmd, (error, stdout, stderr) => {
+      if (error) {
+          console.log(`error: ${error.message}`);
+          return;
+      }
+      if (stderr) {
+          console.log(`stderr: ${stderr}`);
+          return;
+      }
+      //stdout:
+      console.log(`${stdout}`);
+  });
+}
 
 //Endpunkte
 // ignore this
@@ -59,20 +75,9 @@ app.get('/rain', function(req,res) {
 
 // command
 app.get('/off', function(req,res) {
-  var cmd = "python led_scripts/off.py"
-  exec(cmd, (error, stdout, stderr) => {
-      if (error) {
-          console.log(`error: ${error.message}`);
-          return;
-      }
-      if (stderr) {
-          console.log(`stderr: ${stderr}`);
-          return;
-      }
-      //stdout:
-      console.log(`${stdout}`);
-  });
+  off();
 });
+
 // test
 app.get("/test", function (req, res) {
   fs.readFile(filename, "utf8", function (err, data) {
