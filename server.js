@@ -17,8 +17,9 @@ function log(req, res, next) {
 app.use(log);
 
 function off(){
-  var cmd = "python led_scripts/off.py"
-  exec(cmd, (error, stdout, stderr) => {
+  var killcmd ="kill $(pgrep -f 'python rain.py') && python led_scripts/off.py"
+  //var cmd = "python led_scripts/off.py"
+  exec(killcmd, (error, stdout, stderr) => {
       if (error) {
           console.log(`error: ${error.message}`);
           return;
