@@ -68,7 +68,7 @@ app.get('/dimm', function(req,res) {
     res.writeHead(200, {
         "Content-Type": "application/json",
     });
-    res.end("msg":"dimmed");
+    res.end("dimmed");
 });
 
 app.get("/test", function (req, res) {
