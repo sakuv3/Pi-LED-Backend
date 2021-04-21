@@ -10,7 +10,6 @@ SPI_DEVICE = 0
 def disco(pixels, delay=0.001):
     for i in range(5):
         rainbow_cycle(pixels)
-# Define the wheel function to interpolate between different hues.
 
 
 def wheel(pos):
@@ -22,7 +21,6 @@ def wheel(pos):
     else:
         pos -= 170
         return Adafruit_WS2801.RGB_to_color(0, pos * 3, 255 - pos * 3)
-# Define rainbow cycle function to do a cycle of all hues.
 
 
 def rainbow_cycle(pixels, wait=0.1):
