@@ -11,8 +11,8 @@ PIXEL_COUNT = 165
 sleeptime = 0.05
 
 
-def signal_handler(sig, frame):
-  print("sigint ctrl+c")
+#def signal_handler(sig, frame):
+#  print("sigint ctrl+c")
 
 def wheel(pos):
     if pos < 85:
@@ -45,6 +45,6 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
             sleeptime = float(sys.argv[1])
     print("sleeptime: %.10f"%sleeptime)
-    signal.signal(signal.SIGINT, signal_handler)
+ #   signal.signal(signal.SIGINT, signal_handler)
     main()
 

@@ -53,7 +53,7 @@ app.get('/off/', function(req,res) {
     res.status(200).json({msg:'off'});
 });
 
-app.get('/rain/:speed/', function(req,res) {
+app.get('/rain/:speed', function(req,res) {
     kill_if_python_process();
     running = true;
     console.log(options.args);

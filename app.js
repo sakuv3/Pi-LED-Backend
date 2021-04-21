@@ -18,3 +18,12 @@ console.log(buttons);
 buttons.forEach(button => {
     button.addEventListener("click", eventHandler);
 });
+
+let color = document.getElementById("colorwheel");
+color.addEventListener("input", function(event) {
+    let destination = event.target.id;
+    let request = new XMLHttpRequest();
+    //request.onreadystatechange = 
+    request.open("GET", destination + event.target.value);
+    request.send();
+});
