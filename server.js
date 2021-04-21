@@ -17,8 +17,8 @@ let options = {
 };
 
 // Middleware
-var python_process;
-var running = false;
+let pyshell;
+let running = false;
 
 function log(req, res, next) {
   console.log(req.method + " Request at " + req.url);
@@ -26,21 +26,8 @@ function log(req, res, next) {
 }
 function kill_python_process(){
     if (running){
-        var cmd = "kill $(pgrep -f 'python rain.py')";
-        exec(cmd, (error, stdout, stderr) => {
-            if (error) {
-                console.log(`error: ${error.message}`);
-                return;
-            }
-            if (stderr) {
-                console.log(`stderr: ${stderr}`);
-                return;
-            }
-            //stdout:
-            console.log(`${stdout}`);
-        });
-
         running = false;
+
     }
 }
 app.use(log);
@@ -50,10 +37,7 @@ app.use(log);
 //Endpoints
 app.get('/off', function(req,res) {
     //kill_python_process();
-    PythonShell.run('off.py', options, function (err) {
-      if (err) throw err;
-      console.log('finished');
-    });
+    pyshell = new PythonShell('off.py', options);
 
     res.writeHead(200, {
         "Content-Type": "application/json",
@@ -62,21 +46,10 @@ app.get('/off', function(req,res) {
 });
 
 app.get('/rain', function(req,res) {
-    kill_python_process();
+    //kill_python_process();
     running = true;
-    var cmd = "python led_scripts/rain.py"
-    exec(cmd, (error, stdout, stderr) => {
-        if (error) {
-            console.log(`error: ${error.message}`);
-            return;
-        }
-        if (stderr) {
-            console.log(`stderr: ${stderr}`);
-            return;
-        }
-        //stdout:
-        console.log(`${stdout}`);
-    });
+    pyshell = new PythonShell('rain.py', options);
+
     res.writeHead(200, {
         "Content-Type": "application/json",
     });
@@ -85,18 +58,9 @@ app.get('/rain', function(req,res) {
 
 app.get('/dimm', function(req,res) {
     kill_python_process();
-    var cmd = "python led_scripts/dimm.py"
-    exec(cmd, (error, stdout, stderr) => {
-        if (error) {
-            console.log(`error: ${error.message}`);
-            return;
-        }
-        if (stderr) {
-             console.log(`stderr: ${stderr}`);
-            return;
-        }
-        //stdout:
-        console.log(`${stdout}`);
+    PythonShell.run('dimm.py', options, function (err) {
+          if (err) throw err;
+          console.log('finished');
     });
     res.writeHead(200, {
         "Content-Type": "application/json",
