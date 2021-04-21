@@ -38,7 +38,6 @@ app.use(log);
 app.get('/off', function(req,res) {
     kill_if_python_process();
     pyshell = new PythonShell('off.py', options);
-
     res.writeHead(200, {
         "Content-Type": "application/json",
     });
@@ -48,7 +47,11 @@ app.get('/off', function(req,res) {
 app.get('/rain', function(req,res) {
     kill_if_python_process();
     running = true;
-    pyshell = new PythonShell('rain.py', options);
+    pyshell = new PythonShell('rain.py', options, function(err) {
+        if (err) throw err;
+        console.log('party');
+        running = false;
+    });
 
     res.writeHead(200, {
         "Content-Type": "application/json",
@@ -58,9 +61,11 @@ app.get('/rain', function(req,res) {
 
 app.get('/dimm', function(req,res) {
     kill_if_python_process();
-    PythonShell.run('dimm.py', options, function (err) {
+    running = true;
+    pyshell = new PythonShell('dimm.py', options, function (err) {
           if (err) throw err;
-          console.log('finished');
+          console.log('dimmed');
+          running = false;
     });
     res.writeHead(200, {
         "Content-Type": "application/json",
