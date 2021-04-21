@@ -9,15 +9,13 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-
+// Middleware
+let pyshell;
 let options = {
   pythonPath: '/usr/bin/python2.7',
   pythonOptions: ['-u'], // get print results in real-time
   scriptPath: 'led_scripts/',
 };
-
-// Middleware
-let pyshell;
 let running = false;
 
 function log(req, res, next) {
@@ -31,13 +29,15 @@ function kill_if_python_process(){
     }
 }
 app.use(log);
-//app.use(lights_off);
 
 
 //Endpoints
 app.get('/off', function(req,res) {
     kill_if_python_process();
-    pyshell = new PythonShell('off.py', options);
+    PythonShell.run('off.py', options, function (err) {
+        if (err) throw err;
+        console.log('lights off');
+    });
     res.writeHead(200, {
         "Content-Type": "application/json",
     });
@@ -47,11 +47,8 @@ app.get('/off', function(req,res) {
 app.get('/rain', function(req,res) {
     kill_if_python_process();
     running = true;
-    pyshell = new PythonShell('rain.py', options, function(err) {
-        if (err) throw err;
-        console.log('party');
-        running = false;
-    });
+    // script keeps running so we need an instance to be able to kill it
+    pyshell = new PythonShell('rain.py', options);
 
     res.writeHead(200, {
         "Content-Type": "application/json",
@@ -62,10 +59,9 @@ app.get('/rain', function(req,res) {
 app.get('/dimm', function(req,res) {
     kill_if_python_process();
     running = true;
-    pyshell = new PythonShell('dimm.py', options, function (err) {
+    PythonShell.run('dimm.py', options, function (err) {
           if (err) throw err;
           console.log('dimmed');
-          running = false;
     });
     res.writeHead(200, {
         "Content-Type": "application/json",
