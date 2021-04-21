@@ -4,8 +4,8 @@ const express = require('express');
 const cors = require("cors");
 const fs = require("fs");
 const filename = __dirname + "/test.json";
-const PORT = 33333
 const app = express();
+const PORT = 33333
 app.use(express.json());
 app.use(cors());
 
