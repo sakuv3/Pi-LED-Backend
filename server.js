@@ -42,7 +42,7 @@ app.use(log);
 
 //Endpoints
 app.get('/off', function(req,res) {
-    kill_python_process();
+    //kill_python_process();
     var cmd = "python led_scripts/off.py";
     exec(cmd, (error, stdout, stderr) => {
         if (error) {
@@ -56,6 +56,7 @@ app.get('/off', function(req,res) {
         //stdout:
         console.log(`${stdout}`);
     });
+    kill_python_process();
     res.writeHead(200, {
         "Content-Type": "application/json",
     });
