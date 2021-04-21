@@ -7,7 +7,7 @@ import Adafruit_GPIO.SPI as SPI
 SPI_PORT = 0
 SPI_DEVICE = 0
 PIXEL_COUNT = 165
-sleeptime = 0.001
+sleeptime = 0.05
 
 
 def wheel(pos):

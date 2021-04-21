@@ -59,6 +59,7 @@ app.get('/rain/', function(req,res) {
 });
 
 app.get('/rain/:speed/', function(req,res) {
+    console.log("NICE")
     kill_if_python_process();
     running = true;
     // script keeps running so we need an instance to be able to kill it
