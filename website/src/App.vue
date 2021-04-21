@@ -13,20 +13,15 @@ export default {
   name: 'Default-site',
   data(){
     return {
-        backendURL: '192.168.0.11:33333',
-
-    },
-     mounted() {
-        // called when site is first visited/refreshed
-
-     },
-     methods: {
-        offclicked: function() {
-            axios.get(this.backendURL + 'off/').then(response => {
-               console.log(response.data);
-            });
-        }
-     }
+        backendURL: 'http://192.168.0.11:33333/',
+    }
+  },
+  methods: {
+    offclicked: function() {
+      axios.get(this.backendURL + 'off/').then(response => {
+        console.log(response.data);
+      });
+    }
   }
 }
 </script>
