@@ -32,10 +32,6 @@ app.use(log);
 
 
 //Endpoints
-app.get('/wtf', function(req, res){
-    res.json({ user: 'geek' });
-});
-
 app.get('/off', function(req,res) {
     kill_if_python_process();
     PythonShell.run('off.py', options, function (err) {
