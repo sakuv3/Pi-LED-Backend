@@ -24,10 +24,10 @@ function log(req, res, next) {
   console.log(req.method + " Request at " + req.url);
   next();
 }
-function kill_python_process(){
+function kill_if_python_process(){
     if (running){
         running = false;
-
+        pyshell.kill('SIGINT');
     }
 }
 app.use(log);
@@ -36,7 +36,7 @@ app.use(log);
 
 //Endpoints
 app.get('/off', function(req,res) {
-    //kill_python_process();
+    kill_if_python_process();
     pyshell = new PythonShell('off.py', options);
 
     res.writeHead(200, {
@@ -46,7 +46,7 @@ app.get('/off', function(req,res) {
 });
 
 app.get('/rain', function(req,res) {
-    //kill_python_process();
+    kill_if_python_process();
     running = true;
     pyshell = new PythonShell('rain.py', options);
 
@@ -57,7 +57,7 @@ app.get('/rain', function(req,res) {
 });
 
 app.get('/dimm', function(req,res) {
-    kill_python_process();
+    kill_if_python_process();
     PythonShell.run('dimm.py', options, function (err) {
           if (err) throw err;
           console.log('finished');
