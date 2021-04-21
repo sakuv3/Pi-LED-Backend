@@ -41,7 +41,7 @@ app.get('/off', function(req,res) {
     PythonShell.run('off.py', options, function (err) {
         if (err) throw err;
     });
-    res.json({msg:'lights off'});
+    res.status(200).json({msg:'lights off'});
 });
 
 app.get('/rain', function(req,res) {
@@ -50,7 +50,7 @@ app.get('/rain', function(req,res) {
     // script keeps running so we need an instance to be able to kill it
     pyshell = new PythonShell('rain.py', options);
 
-    res.json({msg:'rainbow'});
+    res.status(200).json({msg:'rainbow'});
 });
 
 app.get('/dimm', function(req,res) {
@@ -59,7 +59,7 @@ app.get('/dimm', function(req,res) {
     PythonShell.run('dimm.py', options, function (err) {
           if (err) throw err;
     });
-    res.json({msg:'dimmed'});
+    res.status(200).json({msg:'dimmed'});
 });
 
 app.get("/test", function (req, res) {
