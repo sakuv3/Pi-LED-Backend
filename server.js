@@ -55,6 +55,10 @@ app.get('/dimm', function(req,res) {
       //stdout:
       console.log(`${stdout}`);
   });
+  res.writeHead(200, {
+      "Content-Type": "application/json",
+    });
+    res.end("dimm");
 });
 
 // command
@@ -76,12 +80,16 @@ app.get('/rain', function(req,res) {
   res.writeHead(200, {
     "Content-Type": "application/json",
   });
-  res.end("Off");
+  res.end("rain");
 });
 
 // command
 app.get('/off', function(req,res) {
   off();
+  res.writeHead(200, {
+      "Content-Type": "application/json",
+    });
+    res.end("off");
 });
 
 // test
