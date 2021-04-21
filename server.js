@@ -53,15 +53,6 @@ app.get('/off/', function(req,res) {
     res.status(200).json({msg:'off'});
 });
 
-app.get('/rain/', function(req,res) {
-    kill_if_python_process();
-    running = true;
-    // script keeps running so we need an instance to be able to kill it
-    pyshell = new PythonShell('rain.py', options);
-
-    res.status(200).json({msg:'rain'});
-});
-
 app.get('/rain/:speed/', function(req,res) {
     kill_if_python_process();
     running = true;
