@@ -31,13 +31,22 @@ function kill_if_python_process(){
 app.use(log);
 
 
+// mainpage
+app.get('/', function(req, res) {
+    res.sendFile(__dirname + "/index.html");
+});
+
+app.get('/app.js', function(req, res) {
+    res.sendFile(__dirname + "/app.js");
+});
+
 //Endpoints
 app.get('/off', function(req,res) {
     kill_if_python_process();
     PythonShell.run('off.py', options, function (err) {
         if (err) throw err;
     });
-    res.status(200).json({msg:'lights off'});
+    res.status(200).json({msg:'off'});
 });
 
 app.get('/rain', function(req,res) {
@@ -46,7 +55,7 @@ app.get('/rain', function(req,res) {
     // script keeps running so we need an instance to be able to kill it
     pyshell = new PythonShell('rain.py', options);
 
-    res.status(200).json({msg:'rainbow'});
+    res.status(200).json({msg:'rain'});
 });
 
 app.get('/dimm', function(req,res) {
@@ -55,7 +64,7 @@ app.get('/dimm', function(req,res) {
     PythonShell.run('dimm.py', options, function (err) {
           if (err) throw err;
     });
-    res.status(200).json({msg:'dimmed'});
+    res.status(200).json({msg:'dimm'});
 });
 
 app.get("/test", function (req, res) {
