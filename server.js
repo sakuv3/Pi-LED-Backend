@@ -10,6 +10,12 @@ app.use(express.json());
 app.use(cors());
 
 
+let options = {
+  pythonPath: '/usr/bin/python2.7',
+  pythonOptions: ['-u'], // get print results in real-time
+  scriptPath: 'led_scripts/',
+};
+
 // Middleware
 var python_process;
 var running = false;
@@ -44,11 +50,11 @@ app.use(log);
 //Endpoints
 app.get('/off', function(req,res) {
     //kill_python_process();
-    PythonShell.run('led_scripts/off.py', null, function (err) {
+    PythonShell.run('off.py', options, function (err) {
       if (err) throw err;
       console.log('finished');
     });
-    
+
     res.writeHead(200, {
         "Content-Type": "application/json",
     });
