@@ -1,4 +1,3 @@
-const PythonShell = require('python-shell');
 const { exec } = require("child_process");
 const express = require('express');
 const cors = require("cors");
@@ -18,32 +17,32 @@ function log(req, res, next) {
   console.log(req.method + " Request at " + req.url);
   next();
 }
-function lights_off(){
+function kill_python_process(){
     if (running){
         python_process.kill('SIGINT');
         running = false;
     }
-    var cmd = "python led_scripts/off.py"
-    exec(cmd, (error, stdout, stderr) => {
-        if (error) {
-            console.log(`error: ${error.message}`);
-            return;
-        }
-        if (stderr) {
-            console.log(`stderr: ${stderr}`);
-            return;
-        }
-        //stdout:
-        console.log(`${stdout}`);
-    });
 }
 app.use(log);
-app.use(lights_off);
+//app.use(lights_off);
 
 
 //Endpoints
 app.get('/off', function(req,res) {
-    //lights_off();
+    kill_python_process();
+    var cmd = "python led_scripts/off.py"
+        exec(cmd, (error, stdout, stderr) => {
+            if (error) {
+                console.log(`error: ${error.message}`);
+                return;
+            }
+            if (stderr) {
+                 console.log(`stderr: ${stderr}`);
+                return;
+            }
+            //stdout:
+            console.log(`${stdout}`);
+        });
     res.writeHead(200, {
         "Content-Type": "application/json",
     });
@@ -51,8 +50,11 @@ app.get('/off', function(req,res) {
 });
 
 app.get('/rain', function(req,res) {
-    //lights_off();
+    kill_python_process();
+    running = true;
+    const {PythonShell} = require('python-shell');
     var pyshell = new PythonShell('led_scripts/rain.py');
+
     pyshell.end(function(err){
     if(err){
         console.log(err);}
@@ -66,8 +68,8 @@ app.get('/rain', function(req,res) {
 });
 
 app.get('/dimm', function(req,res) {
-    //lights_off();
-    var cmd = "python led_scripts/dimm.py"
+    kill_python_process();
+    var cmd = "python led_scripts/off.py && python led_scripts/dimm.py"
     exec(cmd, (error, stdout, stderr) => {
         if (error) {
             console.log(`error: ${error.message}`);
