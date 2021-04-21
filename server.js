@@ -1,4 +1,5 @@
 const { exec } = require("child_process");
+let {PythonShell} = require('python-shell')
 const express = require('express');
 const cors = require("cors");
 const fs = require("fs");
@@ -43,20 +44,11 @@ app.use(log);
 //Endpoints
 app.get('/off', function(req,res) {
     //kill_python_process();
-    var cmd = "python led_scripts/off.py";
-    exec(cmd, (error, stdout, stderr) => {
-        if (error) {
-            console.log(`error: ${error.message}`);
-            return;
-        }
-        if (stderr) {
-            console.log(`stderr: ${stderr}`);
-            return;
-        }
-        //stdout:
-        console.log(`${stdout}`);
+    PythonShell.run('led_scripts/off.py', null, function (err) {
+      if (err) throw err;
+      console.log('finished');
     });
-    kill_python_process();
+    
     res.writeHead(200, {
         "Content-Type": "application/json",
     });
