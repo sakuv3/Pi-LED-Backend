@@ -19,7 +19,20 @@ function log(req, res, next) {
 }
 function kill_python_process(){
     if (running){
-        python_process.kill('SIGINT');
+        var cmd = "kill $(pgrep -f 'python rain.py')";
+        exec(cmd, (error, stdout, stderr) => {
+            if (error) {
+                console.log(`error: ${error.message}`);
+                return;
+            }
+            if (stderr) {
+                console.log(`stderr: ${stderr}`);
+                return;
+            }
+            //stdout:
+            console.log(`${stdout}`);
+        });
+
         running = false;
     }
 }
@@ -30,19 +43,19 @@ app.use(log);
 //Endpoints
 app.get('/off', function(req,res) {
     kill_python_process();
-    var cmd = "python led_scripts/off.py"
-        exec(cmd, (error, stdout, stderr) => {
-            if (error) {
-                console.log(`error: ${error.message}`);
-                return;
-            }
-            if (stderr) {
-                 console.log(`stderr: ${stderr}`);
-                return;
-            }
-            //stdout:
-            console.log(`${stdout}`);
-        });
+    var cmd = "python led_scripts/off.py";
+    exec(cmd, (error, stdout, stderr) => {
+        if (error) {
+            console.log(`error: ${error.message}`);
+            return;
+        }
+        if (stderr) {
+            console.log(`stderr: ${stderr}`);
+            return;
+        }
+        //stdout:
+        console.log(`${stdout}`);
+    });
     res.writeHead(200, {
         "Content-Type": "application/json",
     });
@@ -52,15 +65,19 @@ app.get('/off', function(req,res) {
 app.get('/rain', function(req,res) {
     kill_python_process();
     running = true;
-    const {PythonShell} = require('python-shell');
-    var pyshell = new PythonShell('led_scripts/rain.py');
-
-    pyshell.end(function(err){
-    if(err){
-        console.log(err);}
+    var cmd = "python led_scripts/rain.py"
+    exec(cmd, (error, stdout, stderr) => {
+        if (error) {
+            console.log(`error: ${error.message}`);
+            return;
+        }
+        if (stderr) {
+            console.log(`stderr: ${stderr}`);
+            return;
+        }
+        //stdout:
+        console.log(`${stdout}`);
     });
-    python_process = pyshell.childProcess;
-
     res.writeHead(200, {
         "Content-Type": "application/json",
     });
@@ -69,7 +86,7 @@ app.get('/rain', function(req,res) {
 
 app.get('/dimm', function(req,res) {
     kill_python_process();
-    var cmd = "python led_scripts/off.py && python led_scripts/dimm.py"
+    var cmd = "python led_scripts/dimm.py"
     exec(cmd, (error, stdout, stderr) => {
         if (error) {
             console.log(`error: ${error.message}`);
