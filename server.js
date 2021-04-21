@@ -15,7 +15,7 @@ let options = {
   pythonPath: '/usr/bin/python2.7',
   pythonOptions: ['-u'], // get print results in real-time
   scriptPath: 'led_scripts/',
-  args: null
+  args: 0
 };
 let running = false;
 
@@ -41,6 +41,9 @@ app.get('/app.js/', function(req, res) {
     res.sendFile(__dirname + "/app.js");
 });
 
+app.get('/app.css/', function(req, res) {
+    res.sendFile(__dirname + "/app.css");
+});
 //Endpoints
 app.get('/off/', function(req,res) {
     kill_if_python_process();
@@ -63,7 +66,9 @@ app.get('/rain/:speed/', function(req,res) {
     kill_if_python_process();
     running = true;
     let speed = req.params.speed;
-    this.options.args[0] = speed;
+    console.log(options.args);
+    options.args = speed;
+    console.log(options.args);
     // script keeps running so we need an instance to be able to kill it
     pyshell = new PythonShell('rain.py', options);
 

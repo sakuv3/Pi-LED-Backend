@@ -12,9 +12,9 @@ function responseHandler() {
         document.getElementById("placeholder").innerHTML = JSON.parse(this.responseText).msg;
     }
 }
-
 // array of buttons
 let buttons = document.querySelectorAll("button");
+console.log(buttons);
 buttons.forEach(button => {
     button.addEventListener("click", eventHandler);
 });
