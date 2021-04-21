@@ -40,7 +40,7 @@ app.get('/off', function(req,res) {
     res.writeHead(200, {
         "Content-Type": "application/json",
     });
-    res.end("success");
+    res.end("lights off");
 });
 
 app.get('/rain', function(req,res) {
@@ -52,7 +52,7 @@ app.get('/rain', function(req,res) {
     res.writeHead(200, {
         "Content-Type": "application/json",
     });
-    res.end("success");
+    res.end("party mode");
 });
 
 app.get('/dimm', function(req,res) {
@@ -64,7 +64,7 @@ app.get('/dimm', function(req,res) {
     res.writeHead(200, {
         "Content-Type": "application/json",
     });
-    res.end("success");
+    res.end("dimmed");
 });
 
 app.get("/test", function (req, res) {
