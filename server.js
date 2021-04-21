@@ -1,4 +1,4 @@
-const { exec } = require("child_process");
+const { child_process } = require("child_process");
 const express = require('express');
 const cors = require("cors");
 const fs = require("fs");
@@ -20,7 +20,7 @@ function log(req, res, next) {
 function kill_python_process(){
     if (running){
         var cmd = "kill $(pgrep -f 'python rain.py')";
-        exec(cmd, (error, stdout, stderr) => {
+        child_process.exec(cmd, (error, stdout, stderr) => {
             if (error) {
                 console.log(`error: ${error.message}`);
                 return;
@@ -44,7 +44,7 @@ app.use(log);
 app.get('/off', function(req,res) {
     //kill_python_process();
     var cmd = "python led_scripts/off.py";
-    exec(cmd, (error, stdout, stderr) => {
+    child_process.exec(cmd, (error, stdout, stderr) => {
         if (error) {
             console.log(`error: ${error.message}`);
             return;
@@ -67,7 +67,7 @@ app.get('/rain', function(req,res) {
     kill_python_process();
     running = true;
     var cmd = "python led_scripts/rain.py"
-    exec(cmd, (error, stdout, stderr) => {
+    child_process.exec(cmd, (error, stdout, stderr) => {
         if (error) {
             console.log(`error: ${error.message}`);
             return;
@@ -88,7 +88,7 @@ app.get('/rain', function(req,res) {
 app.get('/dimm', function(req,res) {
     kill_python_process();
     var cmd = "python led_scripts/dimm.py"
-    exec(cmd, (error, stdout, stderr) => {
+    child_process.exec(cmd, (error, stdout, stderr) => {
         if (error) {
             console.log(`error: ${error.message}`);
             return;
