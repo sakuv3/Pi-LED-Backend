@@ -36,7 +36,6 @@ app.get('/off', function(req,res) {
     kill_if_python_process();
     PythonShell.run('off.py', options, function (err) {
         if (err) throw err;
-        console.log('lights off');
     });
     res.writeHead(200, {
         "Content-Type": "application/json",
@@ -61,7 +60,6 @@ app.get('/dimm', function(req,res) {
     running = true;
     PythonShell.run('dimm.py', options, function (err) {
           if (err) throw err;
-          console.log('dimmed');
     });
     res.writeHead(200, {
         "Content-Type": "application/json",
