@@ -41,9 +41,6 @@ app.get('/off', function(req,res) {
     PythonShell.run('off.py', options, function (err) {
         if (err) throw err;
     });
-    res.writeHead(200, {
-        "Content-Type": "application/json",
-    });
     res.json({msg:'lights off'});
 });
 
