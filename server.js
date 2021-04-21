@@ -16,6 +16,22 @@ function log(req, res, next) {
 }
 app.use(log);
 
+function sudo(){
+  var sudocmd ='sudo ifconfig'
+  //var cmd = "python led_scripts/off.py"
+  exec(sudocmd, (error, stdout, stderr) => {
+      if (error) {
+          console.log(`error: ${error.message}`);
+          return;
+      }
+      if (stderr) {
+          console.log(`stderr: ${stderr}`);
+          return;
+      }
+      //stdout:
+      console.log(`${stdout}`);
+  });
+}
 function off(){
   var killcmd ='./led_scripts/kill.sh && python led_scripts/off.py'
   //var cmd = "python led_scripts/off.py"
@@ -42,7 +58,6 @@ app.get('/favicon.ico', function(req, res) {
 
 // command
 app.get('/dimm', function(req,res) {
-  off();
   var cmd = "python led_scripts/dimm.py"
   exec(cmd, (error, stdout, stderr) => {
       if (error) {
@@ -74,11 +89,16 @@ app.get('/rain', function(req,res) {
       //stdout:
       console.log(`${stdout}`);
   });
+  res.writeHead(200, {
+    "Content-Type": "application/json",
+  });
+  res.end("Off");
 });
 
 // command
 app.get('/off', function(req,res) {
   off();
+  sudocmd();
 });
 
 // test
