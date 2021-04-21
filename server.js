@@ -56,7 +56,7 @@ app.get('/rain', function(req,res) {
     res.writeHead(200, {
         "Content-Type": "application/json",
     });
-    res.end("msg":"rainbow");
+    res.end("rainbow");
 });
 
 app.get('/dimm', function(req,res) {
