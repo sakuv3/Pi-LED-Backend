@@ -1,3 +1,6 @@
+# No Visual Studio Code Settings
+.vscode
+
 # No node modules
 .DS_Store
 node_modules

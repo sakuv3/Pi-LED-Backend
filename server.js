@@ -33,17 +33,18 @@ app.use(log);
 
 
 // mainpage
-app.get('/', function(req, res) {
+app.get('/', (req, res) => {
     res.sendFile(__dirname + "/index.html");
 });
 
-app.get('/app.js/', function(req, res) {
+app.get('/app.js', (req, res) => {
     res.sendFile(__dirname + "/app.js");
 });
 
-app.get('/app.css/', function(req, res) {
+app.get('/app.css', (req, res) => {
     res.sendFile(__dirname + "/app.css");
 });
+
 //Endpoints
 app.get('/off/', function(req,res) {
     kill_if_python_process();
@@ -51,6 +52,15 @@ app.get('/off/', function(req,res) {
         if (err) throw err;
     });
     res.status(200).json({msg:'off'});
+});
+
+app.get('/dimm/', function(req,res) {
+    kill_if_python_process();
+    running = true;
+    PythonShell.run('dimm.py', options, function (err) {
+          if (err) throw err;
+    });
+    res.status(200).json({msg:'dimm'});
 });
 
 app.get('/rain/:speed', function(req,res) {
@@ -65,14 +75,9 @@ app.get('/rain/:speed', function(req,res) {
     res.status(200).json({msg:'rain'});
 });
 
-app.get('/dimm/', function(req,res) {
-    kill_if_python_process();
-    running = true;
-    PythonShell.run('dimm.py', options, function (err) {
-          if (err) throw err;
-    });
-    res.status(200).json({msg:'dimm'});
-});
+app.get('/colorwheel/:color', (req, res) => {
+    res.status(200).json({msg: req.params.color});
+})
 
 app.get("/test/", function (req, res) {
     fs.readFile(filename, "utf8", function (err, data) {

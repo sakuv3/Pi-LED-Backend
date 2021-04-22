@@ -20,10 +20,12 @@ buttons.forEach(button => {
 });
 
 let color = document.getElementById("colorwheel");
-color.addEventListener("input", function(event) {
-    let destination = event.target.id;
+color.addEventListener("input", event => {
+    let destination = "/colorwheel/";
     let request = new XMLHttpRequest();
-    //request.onreadystatechange = 
-    request.open("GET", destination + event.target.value);
+    request.onreadystatechange = responseHandler;
+    value = event.target.value.slice(1);
+    console.log(value);
+    request.open("GET", destination + value);
     request.send();
 });
