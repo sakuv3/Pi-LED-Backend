@@ -66,9 +66,7 @@ app.get('/dimm/', function(req,res) {
 app.get('/rain/:speed', function(req,res) {
     kill_if_python_process();
     running = true;
-    console.log(options.args);
     options.args = req.params.speed;
-    console.log(options.args);
     // script keeps running so we need an instance to be able to kill it
     pyshell = new PythonShell('rain.py', options);
 
