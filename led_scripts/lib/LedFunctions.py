@@ -3,9 +3,7 @@
 
 import Adafruit_WS2801
 import Adafruit_GPIO.SPI as SPI
-import queue
 import time
-import threading
 
 SPI_PORT = 0
 SPI_DEVICE = 0
@@ -41,13 +39,7 @@ def rainbow_cycle():
         PIXEL.show()
         time.sleep(SLEEPTIME)
 
-def rainbow(Queue):
+def rainbow():
     print("rainbow started")
     while True:
-        try:
-            if Queue.get(block=False) == "stop":
-                print("rainbow stopped")
-                return
-        except queue.Empty:
-            pass
         rainbow_cycle()

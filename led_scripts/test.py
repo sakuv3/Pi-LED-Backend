@@ -1,15 +1,14 @@
 #!/usr/bin/python3
 #coding=utf-8
 
+import multiprocessing
 import queue
 import socket
-import threading
 import time
 
 import lib.LedFunctions as LED
 import lib.Message as MSG
 
-rainbowQueue = queue.Queue()
 
 # socket setup
 TIMEOUT = 10
@@ -39,23 +38,22 @@ while True:
 
         if data["type"] == "colorwheel":
             try:
-                if rainbow_thread.is_alive():
-                    rainbowQueue.put("stop")
+                if rainbow.is_alive():
                     print("stopping rainbow...")
-                    rainbow_thread.join()
+                    rainbow.terminate()
             except NameError:
-                print("rainbow thread not running")
+                print("rainbow not running")
             color = data["args"]
             LED.setColor(color)
         elif data["type"] == "rainbow":
             try:
-                if rainbow_thread.is_alive():
+                if rainbow.is_alive():
                     continue    
             except NameError:
-                print("rainbow thread not running")
+                print("rainbow not running")
 
-            rainbow_thread = threading.Thread(target=LED.rainbow, args=(rainbowQueue,), daemon=True)
-            rainbow_thread.start()
+            rainbow = multiprocessing.Process(target=LED.rainbow, args=(), daemon=True)
+            rainbow.start()
 
         
     
