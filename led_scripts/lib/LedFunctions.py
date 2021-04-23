@@ -1,9 +1,10 @@
 #!/usr/bin/python3
 #coding=utf-8
 
-import time
 import Adafruit_WS2801
 import Adafruit_GPIO.SPI as SPI
+import queue
+import time
 import threading
 
 SPI_PORT = 0
@@ -14,6 +15,7 @@ PIXEL = Adafruit_WS2801.WS2801Pixels(PIXEL_COUNT, spi=SPI.SpiDev(SPI_PORT, SPI_D
 
 
 def setColor(color):
+    # hex to rgb
     (R, G, B) = tuple(int(color[i:i+2], 16) for i in (0, 2, 4))
     PIXEL.clear()
     for n in range(PIXEL_COUNT):
@@ -39,10 +41,13 @@ def rainbow_cycle():
         PIXEL.show()
         time.sleep(SLEEPTIME)
 
-def rainbow(event):
+def rainbow(Queue):
     print("rainbow started")
     while True:
-        if event.is_set():
-            print("rainbow stopped")
-            return
+        try:
+            if Queue.get(block=False) == "stop":
+                print("rainbow stopped")
+                return
+        except queue.Empty:
+            pass
         rainbow_cycle()

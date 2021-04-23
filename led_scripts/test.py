@@ -1,12 +1,15 @@
 #!/usr/bin/python3
 #coding=utf-8
 
+import queue
 import socket
 import threading
 import time
 
 import lib.LedFunctions as LED
 import lib.Message as MSG
+
+rainbowQueue = queue.Queue()
 
 # socket setup
 TIMEOUT = 10
@@ -21,8 +24,7 @@ while True:
         time.sleep(TIMEOUT)
 sock.listen(0)
 print("socket is listening")
-rainbow_event = threading.Event()
-rainbow_thread = threading.Thread(target=LED.rainbow, args=(rainbow_event,), daemon=True)
+
 while True:
     (client, address) = sock.accept()
     print("client from {} connected".format(address))
@@ -36,17 +38,23 @@ while True:
             continue
 
         if data["type"] == "colorwheel":
-            if rainbow_thread.is_alive():
-                rainbow_event.set()
-                print("stopping rainbow...")
-                rainbow_thread.join()
-                rainbow_event.clear()
+            try:
+                if rainbow_thread.is_alive():
+                    rainbowQueue.put("stop")
+                    print("stopping rainbow...")
+                    rainbow_thread.join()
+            except NameError:
+                print("rainbow thread not running")
             color = data["args"]
             LED.setColor(color)
         elif data["type"] == "rainbow":
-            if rainbow_thread.is_alive():
-                continue
-            rainbow_thread = threading.Thread(target=LED.rainbow, args=(rainbow_event,), daemon=True)
+            try:
+                if rainbow_thread.is_alive():
+                    continue    
+            except NameError:
+                print("rainbow thread not running")
+
+            rainbow_thread = threading.Thread(target=LED.rainbow, args=(rainbowQueue,), daemon=True)
             rainbow_thread.start()
 
         
