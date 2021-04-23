@@ -47,15 +47,15 @@ client.connect(55555);
 
 // mainpage
 app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/index.html');
+  res.sendFile(__dirname + '/res/index.html');
 });
 
 app.get('/app.js', (req, res) => {
-  res.sendFile(__dirname + '/app.js');
+  res.sendFile(__dirname + '/res/app.js');
 });
 
 app.get('/app.css', (req, res) => {
-  res.sendFile(__dirname + '/app.css');
+  res.sendFile(__dirname + '/res/app.css');
 });
 
 // Endpoints
