@@ -9,16 +9,6 @@ const PORT = 33333
 app.use(express.json());
 app.use(cors());
 
-// Middleware
-let pyshell;
-let options = {
-  pythonPath: '/usr/bin/python2.7',
-  pythonOptions: ['-u'],  // get print results in real-time
-  scriptPath: 'led_scripts/',
-  args: 0.01
-};
-let running = false;
-
 function log(req, res, next) {
   console.log(req.method + ' Request at ' + req.url);
   next();
@@ -75,15 +65,6 @@ app.get('/colorwheel/:color', (req, res) => {
   sendMsg("colorwheel", req.params.color)
   res.status(200).json({msg: req.params.color});
 })
-
-app.get('/test/', function(req, res) {
-  fs.readFile(filename, 'utf8', function(err, data) {
-    res.writeHead(200, {
-      'Content-Type': 'application/json',
-    });
-    res.end(data);
-  });
-});
 
 // ignore favicon
 app.get('/favicon.ico', function(req, res) {
