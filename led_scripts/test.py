@@ -2,12 +2,21 @@
 #coding=utf-8
 
 import multiprocessing
-import queue
+import signal
 import socket
 import time
 
 import lib.LedFunctions as LED
 import lib.Message as MSG
+
+# signal handler for INTERRUPT
+def handler(signum, frame):
+    print("script is stopping")
+    sock.close()
+    LED.setColor("0")
+    print("script stopped")
+    exit()
+signal.signal(signal.SIGINT, handler)
 
 
 # socket setup
@@ -22,13 +31,15 @@ while True:
         print("Could not bind socket, waiting {} seconds before retrying...".format(TIMEOUT))
         time.sleep(TIMEOUT)
 sock.listen(0)
-print("socket is listening")
 
 while True:
+    print("socket is listening on 55555")
+    # accept a new client (the backend server)
     (client, address) = sock.accept()
     print("client from {} connected".format(address))
     connected = True
     while connected:
+        # get data from client
         data = MSG.getMsg(client)
         if not data:
             connected = False
@@ -37,28 +48,22 @@ while True:
             continue
 
         if data["type"] == "colorwheel":
+            # if rainbow runs, we need to kill it
             try:
                 if rainbow.is_alive():
                     print("stopping rainbow...")
                     rainbow.terminate()
             except NameError:
-                print("rainbow not running")
+                pass
             color = data["args"]
             LED.setColor(color)
         elif data["type"] == "rainbow":
+            # if rainbow runs, no need to stop it
             try:
                 if rainbow.is_alive():
                     continue    
             except NameError:
-                print("rainbow not running")
-
+                pass
+            # run rainbow in seperate process
             rainbow = multiprocessing.Process(target=LED.rainbow, args=(), daemon=True)
             rainbow.start()
-
-        
-    
-    
-
-client.close()
-sock.close()
-exit()

@@ -10,15 +10,15 @@ HEADER_LENGTH = 5
 def getMsg(client) :
     try:
         # Receive our "header" containing message length, it's size is defined and constant
-        head = client.recv(HEADER_LENGTH)
+        data_len = client.recv(HEADER_LENGTH)
         # If we received no data, client gracefully closed a connection, for example using socket.close() or socket.shutdown(socket.SHUT_RDWR)
-        if not len(head):
+        if not len(data_len):
             return False
         #print(head)
         # Receive data
-        data = client.recv(int(head)).decode("utf-8")
-        print(data)
+        data = client.recv(int(data_len)).decode("utf-8")
         data = json.loads(data)
+        print(data)
         # return a dict
         return data
     except socket.error:

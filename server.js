@@ -20,13 +20,30 @@ function sendMsg(msg, args = '') {
   // generate header with predefined length
   // a single message containing the number of bytes, padded to length = 5
   head = data.length.toString().padEnd(5, ' ');
-  console.log('data length: ' + head);
   console.log('data: ' + data);
-  client.write(head, 'utf8');
-  client.write(data, 'utf8');
+  client.write(head + data, 'utf8');
 }
 
-const client = net.createConnection({port: 55555});
+// socket setup
+console.log("creating socket")
+let client = new net.Socket();
+
+// connect handler
+client.on("connect", () => {
+  console.log("connected to server");
+});
+
+// error handler
+client.on("error", () => {
+  console.log("retrying");
+  setTimeout(() => {
+    client.connect(55555);
+  }, 2000);
+});
+
+
+console.log("connecting to server");
+client.connect(55555);
 
 // mainpage
 app.get('/', (req, res) => {
@@ -43,7 +60,7 @@ app.get('/app.css', (req, res) => {
 
 // Endpoints
 app.get('/off/', function(req, res) {
-  sendMsg('colorwheel', '000000');
+  sendMsg('colorwheel', "000000");
   res.status(200).json({msg: 'off'});
 });
 
