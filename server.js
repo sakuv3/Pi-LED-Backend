@@ -29,7 +29,15 @@ function sendMsg(msg, args = '') {
   let obj = new Object();
   obj.type = msg;
   obj.args = args;
-  client.write(JSON.stringify(obj));
+  data = JSON.stringify(obj);
+  // generate header with predefined length
+  // a single message containing the number of bytes, padded to length = 5
+  head = data.length.toString().padEnd(5, " ");
+  console.log("data length: " + head);
+  console.log("data: " + data);
+  client.write(head, "utf8");
+  client.write(data, "utf8");
+  
 }
 
 const client = net.createConnection({port: 55555});
@@ -49,28 +57,22 @@ app.get('/app.css', (req, res) => {
 
 // Endpoints
 app.get('/off/', function(req, res) {
-  sendMsg('off');
+  sendMsg("colorwheel", "000000");
   res.status(200).json({msg: 'off'});
 });
 
 app.get('/dimm/', function(req, res) {
-  sendMsg('dimm');
+  sendMsg("colorwheel", "ff0032")
   res.status(200).json({msg: 'dimm'});
 });
 
-app.get('/rain/:speed', function(req, res) {
-  kill_if_python_process();
-  running = true;
-  console.log(options.args);
-  options.args = req.params.speed;
-  console.log(options.args);
-  // script keeps running so we need an instance to be able to kill it
-  pyshell = new PythonShell('rain.py', options);
-
-  res.status(200).json({msg: 'rain'});
+app.get('/rainbow/', function(req, res) {
+  sendMsg("rainbow")
+  res.status(200).json({msg: 'rainbow'});
 });
 
 app.get('/colorwheel/:color', (req, res) => {
+  sendMsg("colorwheel", req.params.color)
   res.status(200).json({msg: req.params.color});
 })
 
