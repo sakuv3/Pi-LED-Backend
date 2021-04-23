@@ -20,7 +20,6 @@ function sendMsg(msg, args = '') {
   // generate header with predefined length
   // a single message containing the number of bytes, padded to length = 5
   head = data.length.toString().padEnd(5, ' ');
-  console.log('data: ' + data);
   client.write(head + data, 'utf8');
 }
 
@@ -31,6 +30,12 @@ let client = new net.Socket();
 // connect handler
 client.on("connect", () => {
   console.log("connected to server");
+
+  // Start server
+  app.listen(PORT, () => {
+    console.log('Server listening on port ' + PORT);
+  });
+  
 });
 
 // error handler
@@ -83,9 +88,4 @@ app.get('/colorwheel/:color', (req, res) => {
 app.get('/favicon.ico', function(req, res) {
   res.status(204);
   res.end();
-});
-
-// Start server
-app.listen(PORT, () => {
-  console.log('Server listening for requests on port ' + PORT);
 });
