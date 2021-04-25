@@ -31,12 +31,6 @@ let client = new net.Socket();
 // connect handler
 client.on("connect", () => {
   console.log("connected to server");
-
-  // Start server
-  app.listen(PORT, () => {
-    console.log('Server listening on port ' + PORT);
-  });
-  
 });
 
 // error handler
@@ -44,12 +38,17 @@ client.on("error", () => {
   console.log("retrying");
   setTimeout(() => {
     client.connect(55555);
-  }, 2000);
+  }, 10000);
 });
 
 
 console.log("connecting to server");
-client.connect(55555);
+client.connect({port: 55555}, () => {
+  // Start server
+  app.listen(PORT, () => {
+    console.log('Server listening on port ' + PORT);
+  });
+});
 
 // mainpage
 app.get('/', (req, res) => {
