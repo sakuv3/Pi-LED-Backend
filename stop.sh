@@ -20,7 +20,7 @@ PID_NODE=$(<$pidfile_node)
 #see if led process runs
 if ps -p $PID_LED > /dev/null  
 then
-    kill  $PID_LED
+    kill -s SIGINT $PID_LED
     if ! ps -p $PID_LED > /dev/null
     then
         echo "led server  $PID_LED stopped"

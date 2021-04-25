@@ -7,16 +7,18 @@ import socket
 import time
 
 import lib.LedFunctions as LED
+import lib.Logger as Logger
 import lib.Message as MSG
 
-# signal handler for INTERRUPT
-def handler(signum, frame):
-    print("script is stopping")
-    sock.close()
+logger = Logger.getLogger(__name__)
+
+# signal handler for SIGINT
+def exitHandler(signum, frame):
+    logger.debug(f"received SIGNAL {signum}, stopping script")
     LED.setColor("0")
-    print("script stopped")
+    logger.debug("script stopped")
     exit()
-signal.signal(signal.SIGINT, handler)
+signal.signal(signal.SIGINT, exitHandler)
 
 
 # socket setup
@@ -24,11 +26,11 @@ TIMEOUT = 10
 sock = socket.socket()
 while True:
     try:
-        print("Trying to bind socket")
-        sock.bind(("", 55555))
+        logger.debug("Trying to bind socket")
+        sock.bind(("127.0.0.1", 55555))
         break
     except socket.error:
-        print("Could not bind socket, waiting {} seconds before retrying...".format(TIMEOUT))
+        logger.debug("Could not bind socket, waiting {} seconds before retrying...".format(TIMEOUT))
         time.sleep(TIMEOUT)
 sock.listen()
 
@@ -37,10 +39,10 @@ rainbow = False
 
 # connection loop
 while True:
-    print("socket is listening on 55555")
+    logger.debug("socket is listening on 55555")
     # accept a new client (the node server)
     (client, address) = sock.accept()
-    print("client from {} connected".format(address))
+    logger.debug(f"client from {address} connected")
 
     # message loop
     while True:
@@ -48,14 +50,14 @@ while True:
         data = MSG.getMsg(client)
         if not data:
             client.close()
-            print("client disconnected")
+            logger.debug("client disconnected")
             break
 
         # parse data
         if data["type"] == "colorwheel":
             # if rainbow runs, we need to terminate it
             if rainbow and rainbow.is_alive():
-                print("stopping rainbow...")
+                logger.debug("stopping rainbow...")
                 rainbow.terminate()
 
             # set the LED

@@ -4,7 +4,11 @@
 import json
 import socket
 
+import lib.Logger
+
 HEADER_LENGTH = 5
+
+logger = lib.Logger.getLogger(__name__)
 
 
 def getMsg(client: socket) :
@@ -16,9 +20,10 @@ def getMsg(client: socket) :
             return False
         #print(head)
         # Receive data
-        data = client.recv(int(data_len)).decode("utf-8")
+        data_len = int(data_len)
+        data = client.recv(data_len).decode("utf-8")
         data = json.loads(data)
-        print(data)
+        logger.debug(data)
         # return a dict
         return data
     except socket.error:

@@ -5,11 +5,15 @@ import Adafruit_WS2801
 import Adafruit_GPIO.SPI as SPI
 import time
 
+import lib.Logger
+
 SPI_PORT = 0
 SPI_DEVICE = 0
 SLEEPTIME = 0.05
 PIXEL_COUNT = 153
 PIXEL = Adafruit_WS2801.WS2801Pixels(PIXEL_COUNT, spi=SPI.SpiDev(SPI_PORT, SPI_DEVICE))
+
+logger = lib.Logger.getLogger(__name__)
 
 
 def setColor(color: str):
@@ -17,7 +21,7 @@ def setColor(color: str):
     #(R, G, B) = tuple(int(color[i:i+2], 16) for i in (0, 2, 4))
     PIXEL.set_pixels(int(color, 16))
     PIXEL.show()
-    print("pixel set")
+    logger.debug("pixel set")
 
 def wheel(pos: int):
     if pos < 85:
@@ -38,6 +42,6 @@ def rainbow_cycle():
         time.sleep(SLEEPTIME)
 
 def rainbow():
-    print("rainbow started")
+    logger.debug("rainbow started")
     while True:
         rainbow_cycle()
