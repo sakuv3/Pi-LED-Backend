@@ -64,18 +64,25 @@ app.get('/app.css', (req, res) => {
 });
 
 // Endpoints
-app.get('/off/', function(req, res) {
+app.get('/off/', (req, res) => {
   sendMsg('colorwheel', "000000");
   res.status(200).json({msg: 'off'});
 });
 
-app.get('/dimm/', function(req, res) {
+app.get('/dimm/', (req, res) => {
   sendMsg('colorwheel', 'ff0032')
   res.status(200).json({msg: 'dimm'});
 });
 
-app.get('/rainbow/', function(req, res) {
-  sendMsg('rainbow')
+app.get('/rainbow/', (req, res) => {
+  sendMsg('rainbow', '0.05')
+  res.status(200).json({msg: 'rainbow'});
+});
+
+app.get('/rainbow/:speed', (req, res) => {
+  let speed = req.params.speed
+  console.log(speed)
+  sendMsg('rainbow', speed)
   res.status(200).json({msg: 'rainbow'});
 });
 
@@ -85,7 +92,7 @@ app.get('/colorwheel/:color', (req, res) => {
 })
 
 // ignore favicon
-app.get('/favicon.ico', function(req, res) {
+app.get('/favicon.ico', (req, res) => {
   res.status(204);
   res.end();
 });

@@ -16,7 +16,7 @@ logger = Logger.getLogger(__name__)
 def exitHandler(signum, frame):
     logger.debug(f"received SIGNAL {signum}, stopping script")
     LED.setColor("0")
-    logger.debug("script stopped")
+    logger.debug("script stopped\n\n\n\n")
     exit()
 signal.signal(signal.SIGINT, exitHandler)
 
@@ -30,12 +30,13 @@ while True:
         sock.bind(("127.0.0.1", 55555))
         break
     except socket.error:
-        logger.debug("Could not bind socket, waiting {} seconds before retrying...".format(TIMEOUT))
+        logger.debug(f"Could not bind socket, waiting {TIMEOUT} seconds before retrying...")
         time.sleep(TIMEOUT)
 sock.listen()
 
 # process object
 rainbow = False
+rainbow_queue = multiprocessing.Queue()
 
 # connection loop
 while True:
@@ -65,11 +66,16 @@ while True:
             LED.setColor(color)
         
         elif data["type"] == "rainbow":
+            rainbow_speed = float(data["args"])
             # if rainbow runs, no need to stop it
             if rainbow and rainbow.is_alive():
+                logger.debug(f"sending new speed {rainbow_speed}")
+                rainbow_queue.put(rainbow_speed)
                 continue    
 
             #create a new process object and run it
             else:
-                rainbow = multiprocessing.Process(target=LED.rainbow, args=(), daemon=True)
+                rainbow_queue = multiprocessing.Queue()
+                rainbow_queue.put(rainbow_speed)
+                rainbow = multiprocessing.Process(target=LED.rainbow, args=(rainbow_queue,), daemon=True)
                 rainbow.start()

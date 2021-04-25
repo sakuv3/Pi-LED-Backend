@@ -3,13 +3,14 @@
 
 import Adafruit_WS2801
 import Adafruit_GPIO.SPI as SPI
+import multiprocessing
+import queue
 import time
 
 import lib.Logger
 
 SPI_PORT = 0
 SPI_DEVICE = 0
-SLEEPTIME = 0.05
 PIXEL_COUNT = 153
 PIXEL = Adafruit_WS2801.WS2801Pixels(PIXEL_COUNT, spi=SPI.SpiDev(SPI_PORT, SPI_DEVICE))
 
@@ -34,14 +35,21 @@ def wheel(pos: int):
         return Adafruit_WS2801.RGB_to_color(0, pos * 3, 255 - pos * 3)
 
 
-def rainbow_cycle():
-    for j in range(256):  # one cycle of all 256 colors in the wheel
-        for i in range(PIXEL.count()):
-            PIXEL.set_pixel(i, wheel(((i * 256 // PIXEL_COUNT) + j) % 256))
-        PIXEL.show()
-        time.sleep(SLEEPTIME)
-
-def rainbow():
+def rainbow(rainbow_queue: multiprocessing.Queue):
     logger.debug("rainbow started")
+    SLEEPTIME = 0.05
     while True:
-        rainbow_cycle()
+        try:
+            SLEEPTIME = rainbow_queue.get(block=False)
+            logger.debug(f"new sleeptime: {SLEEPTIME}")
+        except queue.Empty:
+            logger.debug("queue is empty")
+            pass
+
+        for j in range(256):  # one cycle of all 256 colors in the wheel
+            for i in range(PIXEL.count()):
+                PIXEL.set_pixel(i, wheel(((i * 256 // PIXEL_COUNT) + j) % 256))
+            PIXEL.show()
+            progress = j/256 * 100
+            time.sleep(SLEEPTIME)
+
