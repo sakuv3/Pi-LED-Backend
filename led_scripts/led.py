@@ -30,40 +30,44 @@ while True:
     except socket.error:
         print("Could not bind socket, waiting {} seconds before retrying...".format(TIMEOUT))
         time.sleep(TIMEOUT)
-sock.listen(0)
+sock.listen()
 
+# process object
+rainbow = False
+
+# connection loop
 while True:
     print("socket is listening on 55555")
-    # accept a new client (the backend server)
+    # accept a new client (the node server)
     (client, address) = sock.accept()
     print("client from {} connected".format(address))
-    connected = True
-    while connected:
+
+    # message loop
+    while True:
         # get data from client
         data = MSG.getMsg(client)
         if not data:
-            connected = False
             client.close()
             print("client disconnected")
-            continue
+            break
 
+        # parse data
         if data["type"] == "colorwheel":
-            # if rainbow runs, we need to kill it
-            try:
-                if rainbow.is_alive():
-                    print("stopping rainbow...")
-                    rainbow.terminate()
-            except NameError:
-                pass
+            # if rainbow runs, we need to terminate it
+            if rainbow and rainbow.is_alive():
+                print("stopping rainbow...")
+                rainbow.terminate()
+
+            # set the LED
             color = data["args"]
             LED.setColor(color)
+        
         elif data["type"] == "rainbow":
             # if rainbow runs, no need to stop it
-            try:
-                if rainbow.is_alive():
-                    continue    
-            except NameError:
-                pass
-            # run rainbow in seperate process
-            rainbow = multiprocessing.Process(target=LED.rainbow, args=(), daemon=True)
-            rainbow.start()
+            if rainbow and rainbow.is_alive():
+                continue    
+
+            #create a new process object and run it
+            else:
+                rainbow = multiprocessing.Process(target=LED.rainbow, args=(), daemon=True)
+                rainbow.start()

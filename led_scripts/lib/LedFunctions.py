@@ -19,7 +19,7 @@ def setColor(color: str):
     PIXEL.show()
     print("pixel set")
 
-def wheel(pos):
+def wheel(pos: int):
     if pos < 85:
         return Adafruit_WS2801.RGB_to_color(pos * 3, 255 - pos * 3, 0)
     elif pos < 170:

@@ -7,7 +7,7 @@ import socket
 HEADER_LENGTH = 5
 
 
-def getMsg(client) :
+def getMsg(client: socket) :
     try:
         # Receive our "header" containing message length, it's size is defined and constant
         data_len = client.recv(HEADER_LENGTH)

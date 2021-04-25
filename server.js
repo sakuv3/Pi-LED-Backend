@@ -1,10 +1,10 @@
 const express = require('express');
-const cors = require('cors');
 const net = require('net');
+
 const app = express();
-const PORT = 33333
 app.use(express.json());
-app.use(cors());
+
+const PORT = 33333
 
 function log(req, res, next) {
   console.log(req.method + ' Request at ' + req.url);
@@ -12,6 +12,7 @@ function log(req, res, next) {
 }
 app.use(log);
 
+// convert msg to JSON and send to server
 function sendMsg(msg, args = '') {
   let obj = new Object();
   obj.type = msg;
