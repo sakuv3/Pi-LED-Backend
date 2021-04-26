@@ -1,31 +1,41 @@
-// get request to server
-function eventHandler(event) {
-    let destination = event.target.id;  // off | dimm | rain
-    let request = new XMLHttpRequest();
-    request.onreadystatechange = responseHandler;
-    request.open("GET", destination);
-    request.send();
-}
-
-function responseHandler() {
-    if(this.readyState == 4 && this.status == 200) {
-        document.getElementById("placeholder").innerHTML = JSON.parse(this.responseText).msg;
-    }
-}
 // array of buttons
-let buttons = document.querySelectorAll("button");
-console.log(buttons);
+const buttons = document.querySelectorAll("button");
 buttons.forEach(button => {
-    button.addEventListener("click", eventHandler);
+    button.addEventListener("click", event => {
+        // GET request to server
+        let destination = event.target.id;  // off | dimm | rainbow
+        let request = new XMLHttpRequest();
+        request.onreadystatechange = res => {};
+        request.open("GET", destination);
+        request.send();
+    });
 });
 
-let color = document.getElementById("colorwheel");
+// colorpicker
+const color = document.getElementById("colorwheel");
+// send new request on input
 color.addEventListener("input", event => {
-    let destination = "/colorwheel/";
+    const destination = "/colorwheel/";
     let request = new XMLHttpRequest();
     request.onreadystatechange = responseHandler;
     value = event.target.value.slice(1);
     console.log(value);
     request.open("GET", destination + value);
+    request.send();
+});
+
+// speed slider
+const slider = document.getElementById("speed-slider");
+const output = document.getElementById("slider-output");
+// default value
+output.innerHTML = slider.value;
+// update slider value and send new GET request
+slider.addEventListener("input", event => {
+    const value = event.target.value;
+    output.innerHTML = value;
+    req_val = 1/(value**2);
+    const destination = "/rainbow/";
+    let request = new XMLHttpRequest();
+    request.open("GET", destination + req_val);
     request.send();
 });
