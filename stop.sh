@@ -23,19 +23,19 @@ do
     name=$(basename "$name")
     if [ -n "$name" ]
     then
-        echo -n "stopping $name..."
+        echo -n "[i] $PID stopping $name..."
         kill -s SIGINT $PID
         # see if process has been killed
         sleep 1
         process=$(ps -q $PID -o comm=)
         if [ -z "$process" ]
         then
-            echo -e "\r$TICK stopped $name $PID"
+            echo -e "\r$TICK $PID stopped $name"
         else
-            echo -e "\r$CROSS could not stop process $name $PID"
+            echo -e "\r$CROSS $PID could not stop process $name"
         fi
     else
-        echo -e "$CROSS process $PID not running"
+        echo -e "$CROSS $PID process not running"
     fi
     rm $file
 done
