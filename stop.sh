@@ -1,8 +1,7 @@
 #!/bin/bash
 
 # holds the Process IDs 
-PIDFILE=/tmp/LED.pid
-
+declare -a PIDFILE=("/tmp/LED.pid" "/tmp/NODE.pid")
 
 # taken from pihole installer script
 RED='\e[0;31m'
@@ -11,34 +10,32 @@ NC='\e[0m'
 TICK="[${GREEN}✓${NC}]"
 CROSS="[${RED}✗${NC}]"
 
-
-# see if PID files exist
-if [ ! -e "$PIDFILE" ]; then
-    echo "server not running"
-    exit 0
-fi
-
-
-while read PID
+for file in "${PIDFILE[@]}"
 do
-    # see if process is running
-    name=$(ps -q $PID -o comm=)
+    # see if PID files exist
+    if [ ! -e "$file" ]; then
+        echo "process not running"
+        continue
+    fi
+    PID=$(< "$file")
+    # see if process is running and save the name
+    name=$(ps -q "$PID" -o args= | awk "{print $2}")
+    name=$(basename "$name")
     if [ -n "$name" ]
     then
+        echo -n "stopping $name..."
         kill -s SIGINT $PID
         # see if process has been killed
-        sleep 0.05
+        sleep 1
         process=$(ps -q $PID -o comm=)
         if [ -z "$process" ]
         then
-            echo -e "$TICK stopped process $name $PID"
+            echo -e "\r$TICK stopped $name $PID"
         else
-            echo -e "$CROSS could not stop process $name $PID"
+            echo -e "\r$CROSS could not stop process $name $PID"
         fi
     else
         echo -e "$CROSS process $PID not running"
     fi
-done < $PIDFILE
-
-
-rm $PIDFILE
+    rm $file
+done
