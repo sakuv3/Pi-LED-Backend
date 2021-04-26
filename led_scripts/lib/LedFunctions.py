@@ -40,8 +40,11 @@ def rainbow(rainbow_queue: multiprocessing.Queue):
     SLEEPTIME = 0.05
     while True:
         try:
-            SLEEPTIME = rainbow_queue.get(block=False)
+            # clear the queue since the script is not fast enough to react to quick changes in speed
+            while not rainbow_queue.empty():
+                SLEEPTIME = rainbow_queue.get(block=False)
             logger.debug(f"new sleeptime: {SLEEPTIME}")
+            logger.debug(f"this cycle will take {256 * SLEEPTIME} seconds, chill out")
         except queue.Empty:
             logger.debug("queue is empty")
             pass
@@ -50,6 +53,5 @@ def rainbow(rainbow_queue: multiprocessing.Queue):
             for i in range(PIXEL.count()):
                 PIXEL.set_pixel(i, wheel(((i * 256 // PIXEL_COUNT) + j) % 256))
             PIXEL.show()
-            progress = j/256 * 100
             time.sleep(SLEEPTIME)
 
