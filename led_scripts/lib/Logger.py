@@ -15,7 +15,9 @@ f_handler = logging.FileHandler(LOG_FILE)
 f_handler.setLevel(logging.DEBUG)
 
 # create formatter and add it to handler
-f_formatter = logging.Formatter(fmt="%(levelname)-7s %(asctime)s: %(name)-15s: in: %(funcName)-20s L:%(lineno)-4s:: %(msg)s", datefmt="%X")
+# for LogRecord attributes see https://docs.python.org/3/library/logging.html#logrecord-attributes
+# for date format see https://strftime.org/
+f_formatter = logging.Formatter(fmt="%(levelname)-7s %(asctime)s  %(name)-20s: in: %(funcName)-20s L:%(lineno)-4s:: %(msg)s", datefmt="%x %X")
 f_handler.setFormatter(f_formatter)
 
 
