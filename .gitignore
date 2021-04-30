@@ -1,6 +1,14 @@
 # No Visual Studio Code Settings
 .vscode
 
+# No Python stuff
+__pycache__
+*.pyc
+
+# No logs
+log/*
+nohup.out
+
 # No node modules
 .DS_Store
 node_modules
