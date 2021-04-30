@@ -87,6 +87,13 @@ app.get('/', (req, res) => {
 //   res.sendFile(__dirname + '/res/app.css');
 // });
 
+app.get('/rain/:speed', function(req,res) {
+    kill_if_python_process();
+    running = true;
+    options.args = req.params.speed;
+    // script keeps running so we need an instance to be able to kill it
+    pyshell = new PythonShell('rain.py', options);
+
 // Endpoints
 app.get('/off/', (req, res) => {
   sendMsg('colorwheel', "000000");
